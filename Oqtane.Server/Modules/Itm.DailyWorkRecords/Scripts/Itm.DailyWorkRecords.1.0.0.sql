@@ -1,27 +1,3 @@
-/*  
-Create Itm Daily Work Record tables
-*/
-
-CREATE TABLE [dbo].[ItmDailyWorkRecord]
-(
-	[DailyWorkRecordId] [int] IDENTITY(1,1) NOT NULL,
-	[ModuleId] [int] NOT NULL,
-	[UserId] [int] NOT NULL,
-	[Date] [datetime] NOT NULL,
-	[ShiftId] [int] NOT NULL,
-	[Start] [datetime] NOT NULL,
-	[End] [datetime] NOT NULL,
-	[CreatedBy] [nvarchar](256) NOT NULL,
-	[CreatedOn] [datetime] NOT NULL,
-	[ModifiedBy] [nvarchar](256) NOT NULL,
-	[ModifiedOn] [datetime] NOT NULL,
-	CONSTRAINT [PK_ItmDailyWorkRecord] PRIMARY KEY CLUSTERED
-	(
-		[DailyWorkRecordId] ASC
-	)
-)
-GO
-
 CREATE TABLE [dbo].[ItmShift]
 (
 	[ShiftId] [int] IDENTITY(1,1) NOT NULL,
@@ -84,6 +60,26 @@ CREATE TABLE [dbo].[ItmProcess]
 	CONSTRAINT [PK_ItmProcess] PRIMARY KEY CLUSTERED
 	(
 		[ProcessId] ASC
+	)
+)
+GO
+
+CREATE TABLE [dbo].[ItmDailyWorkRecord]
+(
+	[DailyWorkRecordId] [int] IDENTITY(1,1) NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[UserId] [int] NOT NULL,
+	[Date] [datetime] NOT NULL,
+	[ShiftId] [int] NOT NULL,
+	[Start] [datetime] NOT NULL,
+	[End] [datetime] NOT NULL,
+	[CreatedBy] [nvarchar](256) NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[ModifiedBy] [nvarchar](256) NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+	CONSTRAINT [PK_ItmDailyWorkRecord] PRIMARY KEY CLUSTERED
+	(
+		[DailyWorkRecordId] ASC
 	)
 )
 GO
