@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
-namespace Oqtane.Modules.Itm.DailyWorkRecords.Models
+namespace Itm.DailyWorkRecords.Models
 {
     [Table("ItmTask")]
     public class Task
     {
+        [Key]
         public int TaskId { get; set; }
         public int DailyWorkRecordId { get; set; }
         public int ProjectId { get; set; }

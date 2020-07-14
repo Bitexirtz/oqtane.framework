@@ -1,12 +1,14 @@
-﻿using Oqtane.Models;
-using System;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Oqtane.Models;
 
-namespace Oqtane.Modules.Itm.DailyWorkRecords.Models
+namespace Itm.DailyWorkRecords.Models
 {
     [Table("ItmShift")]
     public class Shift : IAuditable
     {
+        [Key]
         public int ShiftId { get; set; }
         public string Name { get; set; }
         public DateTime Start { get; set; }

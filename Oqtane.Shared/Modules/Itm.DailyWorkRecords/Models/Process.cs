@@ -1,12 +1,14 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Oqtane.Models;
 
-namespace Oqtane.Modules.Itm.DailyWorkRecords.Models
+namespace Itm.DailyWorkRecords.Models
 {
     [Table("ItmProcess")]
     public class Process : IAuditable
     {
+        [Key]
         public int ProcessId { get; set; }
         public string Name { get; set; }
         public string CreatedBy { get; set; }
