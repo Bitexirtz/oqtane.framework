@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Itm.DailyWorkRecords.Models
 {
-    [Table("ItmTask")]
-    public class Task
+    [Table("ItmWork")]
+    public class Work
     {
         [Key]
-        public int TaskId { get; set; }
+        public int WorkId { get; set; }
         public int DailyWorkRecordId { get; set; }
         public int ProjectId { get; set; }
         public int RegularMh { get; set; }

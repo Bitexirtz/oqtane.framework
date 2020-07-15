@@ -11,7 +11,7 @@ namespace Itm.DailyWorkRecords.Repository
         public virtual DbSet<DailyWorkRecord> DailyWorkRecord { get; set; }
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<Process> Process { get; set; }
-        public virtual DbSet<Task> Task { get; set; }
+        public virtual DbSet<Work> Work { get; set; }
         public virtual DbSet<Shift> Shift { get; set; }
 
         public DailyWorkRecordContext(ITenantResolver tenantResolver, IHttpContextAccessor accessor) : base(tenantResolver, accessor)

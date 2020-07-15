@@ -23,7 +23,7 @@ namespace Itm.DailyWorkRecords.Services
         public async Task<List<DailyWorkRecord>> GetDailyWorkRecordsAsync(int ModuleId)
         {
             List<DailyWorkRecord> DailyWorkRecords = await GetJsonAsync<List<DailyWorkRecord>>(CreateAuthPolicyUrl($"{Apiurl}?moduleid={ModuleId}", ModuleId));
-            return DailyWorkRecords.OrderBy(item => item.Name).ToList();
+            return DailyWorkRecords.OrderBy(item => item.Date).ToList();
         }
 
         public async Task<DailyWorkRecord> GetDailyWorkRecordAsync(int DailyWorkRecordId, int ModuleId)

@@ -17,16 +17,16 @@ CREATE TABLE [dbo].[ItmShift]
 )
 GO
 
-CREATE TABLE [dbo].[ItmTask]
+CREATE TABLE [dbo].[ItmWork]
 (
-	[TaskId] [int] IDENTITY(1,1) NOT NULL,
+	[WorkId] [int] IDENTITY(1,1) NOT NULL,
 	[DailyWorkRecordId] [int] NOT NULL,
 	[ProjectId] [int] NOT NULL,
 	[RegularMh] [int] NOT NULL,
 	[OvertimeMh] [int],
-	CONSTRAINT [PK_ItmTask] PRIMARY KEY CLUSTERED
+	CONSTRAINT [PK_ItmWork] PRIMARY KEY CLUSTERED
 	(
-		[TaskId] ASC
+		[WorkId] ASC
 	)
 )
 GO
@@ -114,12 +114,12 @@ REFERENCES [dbo].[ItmShift] ([ShiftId])
 ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[ItmTask] WITH CHECK ADD  CONSTRAINT [FK_ItmTask_ItmDailyWorkRecord] FOREIGN KEY([DailyWorkRecordId])
+ALTER TABLE [dbo].[ItmWork] WITH CHECK ADD  CONSTRAINT [FK_ItmWork_ItmDailyWorkRecord] FOREIGN KEY([DailyWorkRecordId])
 REFERENCES [dbo].[ItmDailyWorkRecord] ([DailyWorkRecordId])
 ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[ItmTask] WITH CHECK ADD  CONSTRAINT [FK_ItmTask_ItmProject] FOREIGN KEY([ProjectId])
+ALTER TABLE [dbo].[ItmWork] WITH CHECK ADD  CONSTRAINT [FK_ItmWork_ItmProject] FOREIGN KEY([ProjectId])
 REFERENCES [dbo].[ItmProject] ([ProjectId])
 ON DELETE CASCADE
 GO
