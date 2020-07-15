@@ -66,9 +66,9 @@ CREATE TABLE [dbo].[ItmProcess]
 )
 GO
 
-CREATE TABLE [dbo].[ItmDailyWorkRecord]
+CREATE TABLE [dbo].[ItmDailyWork]
 (
-	[DailyWorkRecordId] [int] IDENTITY(1,1) NOT NULL,
+	[DailyWorkId] [int] IDENTITY(1,1) NOT NULL,
 	[ModuleId] [int] NOT NULL,
 	[UserId] [int] NOT NULL,
 	[Date] [datetime] NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE [dbo].[ItmDailyWorkRecord]
 	[CreatedOn] [datetime] NOT NULL,
 	[ModifiedBy] [nvarchar](256) NOT NULL,
 	[ModifiedOn] [datetime] NOT NULL,
-	CONSTRAINT [PK_ItmDailyWorkRecord] PRIMARY KEY CLUSTERED
+	CONSTRAINT [PK_ItmDailyWork] PRIMARY KEY CLUSTERED
 	(
 		[DailyWorkRecordId] ASC
 	)
@@ -89,7 +89,7 @@ GO
 /*  
 Create foreign key relationships
 */
-ALTER TABLE [dbo].[ItmDailyWorkRecord]  WITH CHECK ADD  CONSTRAINT [FK_ItmDailyWorkRecord_Module] FOREIGN KEY([ModuleId])
+ALTER TABLE [dbo].[ItmDailyWork]  WITH CHECK ADD  CONSTRAINT [FK_ItmDailyWork_Module] FOREIGN KEY([ModuleId])
 REFERENCES [dbo].[Module] ([ModuleId])
 ON DELETE CASCADE
 GO
@@ -104,7 +104,7 @@ REFERENCES [dbo].[Module] ([ModuleId])
 ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[ItmDailyWorkRecord] WITH CHECK ADD  CONSTRAINT [FK_ItmDailyWorkRecord_User] FOREIGN KEY([UserId])
+ALTER TABLE [dbo].[ItmDailyWork] WITH CHECK ADD  CONSTRAINT [FK_ItmDailyWork_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([UserId])
 ON DELETE CASCADE
 GO
@@ -114,8 +114,8 @@ REFERENCES [dbo].[ItmShift] ([ShiftId])
 ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[ItmWork] WITH CHECK ADD  CONSTRAINT [FK_ItmWork_ItmDailyWorkRecord] FOREIGN KEY([DailyWorkRecordId])
-REFERENCES [dbo].[ItmDailyWorkRecord] ([DailyWorkRecordId])
+ALTER TABLE [dbo].[ItmWork] WITH CHECK ADD  CONSTRAINT [FK_ItmWork_ItmDailyWork] FOREIGN KEY([DailyWorkRecordId])
+REFERENCES [dbo].[ItmDailyWork] ([DailyWorkRecordId])
 ON DELETE CASCADE
 GO
 

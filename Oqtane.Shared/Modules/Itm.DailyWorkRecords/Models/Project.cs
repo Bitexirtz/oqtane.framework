@@ -13,8 +13,8 @@ namespace Itm.DailyWorkRecords.Models
         public int ModuleId { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public int Status { get; set; }
 
         public string CreatedBy { get; set; }

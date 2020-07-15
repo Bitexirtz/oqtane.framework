@@ -22,7 +22,7 @@ namespace Itm.DailyWorkRecords.Manager
         public string ExportModule(Module module)
         {
             string content = "";
-            List<DailyWorkRecord> DailyWorkRecords = _DailyWorkRecords.GetDailyWorkRecords(module.ModuleId).ToList();
+            List<DailyWork> DailyWorkRecords = _DailyWorkRecords.GetDailyWorkRecords(module.ModuleId).ToList();
             if (DailyWorkRecords != null)
             {
                 content = JsonSerializer.Serialize(DailyWorkRecords);
@@ -32,16 +32,16 @@ namespace Itm.DailyWorkRecords.Manager
 
         public void ImportModule(Module module, string content, string version)
         {
-            List<DailyWorkRecord> DailyWorkRecords = null;
+            List<DailyWork> DailyWorkRecords = null;
             if (!string.IsNullOrEmpty(content))
             {
-                DailyWorkRecords = JsonSerializer.Deserialize<List<DailyWorkRecord>>(content);
+                DailyWorkRecords = JsonSerializer.Deserialize<List<DailyWork>>(content);
             }
             if (DailyWorkRecords != null)
             {
-                foreach(DailyWorkRecord DailyWorkRecord in DailyWorkRecords)
+                foreach(DailyWork DailyWorkRecord in DailyWorkRecords)
                 {
-                    DailyWorkRecord _DailyWorkRecord = new DailyWorkRecord();
+                    DailyWork _DailyWorkRecord = new DailyWork();
                     _DailyWorkRecord.ModuleId = module.ModuleId;
                     _DailyWorkRecords.AddDailyWorkRecord(_DailyWorkRecord);
                 }

@@ -5,10 +5,10 @@ namespace Itm.DailyWorkRecords.Repository
 {
     public interface IDailyWorkRecordRepository
     {
-        IEnumerable<DailyWorkRecord> GetDailyWorkRecords(int ModuleId);
-        DailyWorkRecord GetDailyWorkRecord(int DailyWorkRecordId);
-        DailyWorkRecord AddDailyWorkRecord(DailyWorkRecord DailyWorkRecord);
-        DailyWorkRecord UpdateDailyWorkRecord(DailyWorkRecord DailyWorkRecord);
+        IEnumerable<DailyWork> GetDailyWorkRecords(int ModuleId);
+        DailyWork GetDailyWorkRecord(int DailyWorkRecordId);
+        DailyWork AddDailyWorkRecord(DailyWork DailyWorkRecord);
+        DailyWork UpdateDailyWorkRecord(DailyWork DailyWorkRecord);
         void DeleteDailyWorkRecord(int DailyWorkRecordId);
     }
 }

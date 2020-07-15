@@ -31,7 +31,7 @@ namespace Itm.DailyWorkRecords.Controllers
         // GET: api/<controller>?moduleid=x
         [HttpGet]
         [Authorize(Policy = "ViewModule")]
-        public IEnumerable<DailyWorkRecord> Get(string moduleid)
+        public IEnumerable<DailyWork> Get(string moduleid)
         {
             return _DailyWorkRecords.GetDailyWorkRecords(int.Parse(moduleid));
         }
@@ -39,9 +39,9 @@ namespace Itm.DailyWorkRecords.Controllers
         // GET api/<controller>/5
         [HttpGet("{id}")]
         [Authorize(Policy = "ViewModule")]
-        public DailyWorkRecord Get(int id)
+        public DailyWork Get(int id)
         {
-            DailyWorkRecord DailyWorkRecord = _DailyWorkRecords.GetDailyWorkRecord(id);
+            DailyWork DailyWorkRecord = _DailyWorkRecords.GetDailyWorkRecord(id);
             if (DailyWorkRecord != null && DailyWorkRecord.ModuleId != _entityId)
             {
                 DailyWorkRecord = null;
@@ -52,7 +52,7 @@ namespace Itm.DailyWorkRecords.Controllers
         // POST api/<controller>
         [HttpPost]
         [Authorize(Policy = "EditModule")]
-        public DailyWorkRecord Post([FromBody] DailyWorkRecord DailyWorkRecord)
+        public DailyWork Post([FromBody] DailyWork DailyWorkRecord)
         {
             if (ModelState.IsValid && DailyWorkRecord.ModuleId == _entityId)
             {
@@ -65,7 +65,7 @@ namespace Itm.DailyWorkRecords.Controllers
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         [Authorize(Policy = "EditModule")]
-        public DailyWorkRecord Put(int id, [FromBody] DailyWorkRecord DailyWorkRecord)
+        public DailyWork Put(int id, [FromBody] DailyWork DailyWorkRecord)
         {
             if (ModelState.IsValid && DailyWorkRecord.ModuleId == _entityId)
             {
@@ -80,7 +80,7 @@ namespace Itm.DailyWorkRecords.Controllers
         [Authorize(Policy = "EditModule")]
         public void Delete(int id)
         {
-            DailyWorkRecord DailyWorkRecord = _DailyWorkRecords.GetDailyWorkRecord(id);
+            DailyWork DailyWorkRecord = _DailyWorkRecords.GetDailyWorkRecord(id);
             if (DailyWorkRecord != null && DailyWorkRecord.ModuleId == _entityId)
             {
                 _DailyWorkRecords.DeleteDailyWorkRecord(id);

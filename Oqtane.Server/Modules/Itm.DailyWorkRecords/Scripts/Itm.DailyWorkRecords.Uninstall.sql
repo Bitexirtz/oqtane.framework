@@ -10,5 +10,5 @@ GO
 DROP TABLE [dbo].[ItmShift]
 GO
 
-DROP TABLE [dbo].[ItmDailyWorkRecord]
+DROP TABLE [dbo].[ItmDailyWork]
 GO

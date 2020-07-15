@@ -8,7 +8,7 @@ namespace Itm.DailyWorkRecords.Repository
 {
     public class DailyWorkRecordContext : DBContextBase, IService
     {
-        public virtual DbSet<DailyWorkRecord> DailyWorkRecord { get; set; }
+        public virtual DbSet<DailyWork> DailyWorkRecord { get; set; }
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<Process> Process { get; set; }
         public virtual DbSet<Work> Work { get; set; }
