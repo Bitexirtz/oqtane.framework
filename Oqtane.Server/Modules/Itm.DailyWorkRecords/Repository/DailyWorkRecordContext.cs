@@ -1,14 +1,18 @@
-using Microsoft.EntityFrameworkCore;
+using Itm.DailyWorkRecords.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Oqtane.Modules;
 using Oqtane.Repository;
-using Itm.DailyWorkRecords.Models;
 
 namespace Itm.DailyWorkRecords.Repository
 {
     public class DailyWorkRecordContext : DBContextBase, IService
     {
         public virtual DbSet<DailyWorkRecord> DailyWorkRecord { get; set; }
+        public virtual DbSet<Project> Project { get; set; }
+        public virtual DbSet<Process> Process { get; set; }
+        public virtual DbSet<Task> Task { get; set; }
+        public virtual DbSet<Shift> Shift { get; set; }
 
         public DailyWorkRecordContext(ITenantResolver tenantResolver, IHttpContextAccessor accessor) : base(tenantResolver, accessor)
         {

@@ -10,6 +10,7 @@ namespace Itm.DailyWorkRecords.Models
     {
         [Key]
         public int ShiftId { get; set; }
+        public int ModuleId { get; set; }
         public string Name { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }

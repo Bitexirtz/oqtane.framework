@@ -5,7 +5,7 @@ namespace Itm.DailyWorkRecords.Repository
 {
     public interface ITaskRepository
     {
-        IEnumerable<Task> GetTasks(int ModuleId);
+        IEnumerable<Task> GetTasks(int DailyWorkRecordId);
         Task GetTask(int TaskId);
         Task AddTask(Task Task);
         Task UpdateTask(Task Task);

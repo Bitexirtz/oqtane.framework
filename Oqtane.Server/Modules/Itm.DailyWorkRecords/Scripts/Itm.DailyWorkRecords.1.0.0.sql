@@ -1,6 +1,7 @@
 CREATE TABLE [dbo].[ItmShift]
 (
 	[ShiftId] [int] IDENTITY(1,1) NOT NULL,
+	[ModuleId] [int] NOT NULL,
 	[Name] [nvarchar] (256) NOT NULL,
 	[Start] [datetime] NOT NULL,
 	[End] [datetime] NOT NULL,
@@ -52,6 +53,7 @@ GO
 CREATE TABLE [dbo].[ItmProcess] 
 (
 	[ProcessId] [int] IDENTITY(1,1) NOT NULL,
+	[ModuleId] [int] NOT NULL,
 	[Name] [nvarchar] (256) NOT NULL,
 	[CreatedBy] [nvarchar](256) NOT NULL,
 	[CreatedOn] [datetime] NOT NULL,
@@ -88,6 +90,16 @@ GO
 Create foreign key relationships
 */
 ALTER TABLE [dbo].[ItmDailyWorkRecord]  WITH CHECK ADD  CONSTRAINT [FK_ItmDailyWorkRecord_Module] FOREIGN KEY([ModuleId])
+REFERENCES [dbo].[Module] ([ModuleId])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[ItmProcess]  WITH CHECK ADD  CONSTRAINT [FK_ItmProcess_Module] FOREIGN KEY([ModuleId])
+REFERENCES [dbo].[Module] ([ModuleId])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[ItmShift]  WITH CHECK ADD  CONSTRAINT [FK_ItmShift_Module] FOREIGN KEY([ModuleId])
 REFERENCES [dbo].[Module] ([ModuleId])
 ON DELETE CASCADE
 GO
