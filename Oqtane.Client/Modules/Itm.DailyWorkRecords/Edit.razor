@@ -53,11 +53,11 @@
                 DailyWorkRecord DailyWorkRecord = await DailyWorkRecordService.GetDailyWorkRecordAsync(_id, ModuleState.ModuleId);
                 if (DailyWorkRecord != null)
                 {
-                    _name = DailyWorkRecord.Name;
-                    _createdby = DailyWorkRecord.CreatedBy;
-                    _createdon = DailyWorkRecord.CreatedOn;
-                    _modifiedby = DailyWorkRecord.ModifiedBy;
-                    _modifiedon = DailyWorkRecord.ModifiedOn;
+                    _name = DailyWorkRecord.DailyWork.Date.ToString();
+                    _createdby = DailyWorkRecord.DailyWork.CreatedBy;
+                    _createdon = DailyWorkRecord.DailyWork.CreatedOn;
+                    _modifiedby = DailyWorkRecord.DailyWork.ModifiedBy;
+                    _modifiedon = DailyWorkRecord.DailyWork.ModifiedOn;
                 }
             }
         }
@@ -75,15 +75,15 @@
             if (PageState.Action == "Add")
             {
                 DailyWorkRecord DailyWorkRecord = new DailyWorkRecord();
-                DailyWorkRecord.ModuleId = ModuleState.ModuleId;
-                DailyWorkRecord.Name = _name;
+                DailyWorkRecord.DailyWork.ModuleId = ModuleState.ModuleId;
+                DailyWorkRecord.DailyWork.Date = DateTime.Parse(_name);
                 DailyWorkRecord = await DailyWorkRecordService.AddDailyWorkRecordAsync(DailyWorkRecord);
                 await logger.LogInformation("DailyWorkRecord Added {DailyWorkRecord}", DailyWorkRecord);
             }
             else
             {
                 DailyWorkRecord DailyWorkRecord = await DailyWorkRecordService.GetDailyWorkRecordAsync(_id, ModuleState.ModuleId);
-                DailyWorkRecord.Name = _name;
+                DailyWorkRecord.DailyWork.Date = DateTime.Parse(_name);
                 await DailyWorkRecordService.UpdateDailyWorkRecordAsync(DailyWorkRecord);
                 await logger.LogInformation("DailyWorkRecord Updated {DailyWorkRecord}", DailyWorkRecord);
             }

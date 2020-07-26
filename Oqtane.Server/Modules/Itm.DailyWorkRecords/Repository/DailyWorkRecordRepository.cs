@@ -1,8 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Collections.Generic;
-using Oqtane.Modules;
+using System.Linq;
 using Itm.DailyWorkRecords.Models;
+using Microsoft.EntityFrameworkCore;
+using Oqtane.Modules;
 
 namespace Itm.DailyWorkRecords.Repository
 {
@@ -15,34 +15,60 @@ namespace Itm.DailyWorkRecords.Repository
             _db = context;
         }
 
-        public IEnumerable<DailyWork> GetDailyWorkRecords(int ModuleId)
+        public IEnumerable<DailyWorkRecord> GetDailyWorkRecords(int ModuleId)
         {
-            return _db.DailyWorkRecord.Where(item => item.ModuleId == ModuleId);
+            var dailyWorkRecords = new List<DailyWorkRecord>();
+            var dailyWorks = _db.DailyWork.Where(item => item.ModuleId == ModuleId);
+
+            foreach (var dailyWork in dailyWorks)
+            {
+                var dailyWorkRecord = new DailyWorkRecord();
+
+                dailyWorkRecord.DailyWork = dailyWork;
+                dailyWorkRecord.Works = _db.Work.Where(item => item.WorkId == dailyWork.DailyWorkId).ToList();
+            }
+
+            return dailyWorkRecords;
         }
 
-        public DailyWork GetDailyWorkRecord(int DailyWorkRecordId)
+        public DailyWorkRecord GetDailyWorkRecord(int DailyWorkId)
         {
-            return _db.DailyWorkRecord.Find(DailyWorkRecordId);
+            var dailyWorkRecord = new DailyWorkRecord();
+
+            dailyWorkRecord.DailyWork = _db.DailyWork.Where(item => item.DailyWorkId == DailyWorkId).FirstOrDefault();
+            dailyWorkRecord.Works = _db.Work.Where(item => item.WorkId == dailyWorkRecord.DailyWork.DailyWorkId).ToList();
+
+            return dailyWorkRecord;
         }
 
-        public DailyWork AddDailyWorkRecord(DailyWork DailyWorkRecord)
+        public DailyWorkRecord AddDailyWorkRecord(DailyWorkRecord DailyWorkRecord)
         {
-            _db.DailyWorkRecord.Add(DailyWorkRecord);
+            _db.DailyWork.Add(DailyWorkRecord.DailyWork);
+            _db.Work.AddRange(DailyWorkRecord.Works);
             _db.SaveChanges();
             return DailyWorkRecord;
         }
 
-        public DailyWork UpdateDailyWorkRecord(DailyWork DailyWorkRecord)
+        public Work AddDailyWorkWork(Work Work)
         {
-            _db.Entry(DailyWorkRecord).State = EntityState.Modified;
+            _db.Work.Add(Work);
             _db.SaveChanges();
-            return DailyWorkRecord;
+
+
+            return Work;
         }
 
-        public void DeleteDailyWorkRecord(int DailyWorkRecordId)
+        public DailyWork UpdateDailyWork(DailyWork DailyWork)
         {
-            DailyWork DailyWorkRecord = _db.DailyWorkRecord.Find(DailyWorkRecordId);
-            _db.DailyWorkRecord.Remove(DailyWorkRecord);
+            _db.Entry(DailyWork).State = EntityState.Modified;
+            _db.SaveChanges();
+            return DailyWork;
+        }
+
+        public void DeleteDailyWorkRecord(int DailyWorkId)
+        {
+            DailyWork dailyWork = _db.DailyWork.Find(DailyWorkId);
+            _db.DailyWork.Remove(dailyWork);
             _db.SaveChanges();
         }
     }

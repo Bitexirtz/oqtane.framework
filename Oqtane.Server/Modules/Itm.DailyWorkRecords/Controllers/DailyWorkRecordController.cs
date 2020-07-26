@@ -31,7 +31,7 @@ namespace Itm.DailyWorkRecords.Controllers
         // GET: api/<controller>?moduleid=x
         [HttpGet]
         [Authorize(Policy = "ViewModule")]
-        public IEnumerable<DailyWork> Get(string moduleid)
+        public IEnumerable<DailyWorkRecord> Get(string moduleid)
         {
             return _DailyWorkRecords.GetDailyWorkRecords(int.Parse(moduleid));
         }
@@ -39,10 +39,10 @@ namespace Itm.DailyWorkRecords.Controllers
         // GET api/<controller>/5
         [HttpGet("{id}")]
         [Authorize(Policy = "ViewModule")]
-        public DailyWork Get(int id)
+        public DailyWorkRecord Get(int id)
         {
-            DailyWork DailyWorkRecord = _DailyWorkRecords.GetDailyWorkRecord(id);
-            if (DailyWorkRecord != null && DailyWorkRecord.ModuleId != _entityId)
+            DailyWorkRecord DailyWorkRecord = _DailyWorkRecords.GetDailyWorkRecord(id);
+            if (DailyWorkRecord != null && DailyWorkRecord.DailyWork.ModuleId != _entityId)
             {
                 DailyWorkRecord = null;
             }
@@ -52,9 +52,9 @@ namespace Itm.DailyWorkRecords.Controllers
         // POST api/<controller>
         [HttpPost]
         [Authorize(Policy = "EditModule")]
-        public DailyWork Post([FromBody] DailyWork DailyWorkRecord)
+        public DailyWorkRecord Post([FromBody] DailyWorkRecord DailyWorkRecord)
         {
-            if (ModelState.IsValid && DailyWorkRecord.ModuleId == _entityId)
+            if (ModelState.IsValid && DailyWorkRecord.DailyWork.ModuleId == _entityId)
             {
                 DailyWorkRecord = _DailyWorkRecords.AddDailyWorkRecord(DailyWorkRecord);
                 _logger.Log(LogLevel.Information, this, LogFunction.Create, "DailyWorkRecord Added {DailyWorkRecord}", DailyWorkRecord);
@@ -65,13 +65,14 @@ namespace Itm.DailyWorkRecords.Controllers
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         [Authorize(Policy = "EditModule")]
-        public DailyWork Put(int id, [FromBody] DailyWork DailyWorkRecord)
+        public DailyWorkRecord Put(int id, [FromBody] DailyWorkRecord DailyWorkRecord)
         {
-            if (ModelState.IsValid && DailyWorkRecord.ModuleId == _entityId)
+            if (ModelState.IsValid && DailyWorkRecord.DailyWork.ModuleId == _entityId)
             {
-                DailyWorkRecord = _DailyWorkRecords.UpdateDailyWorkRecord(DailyWorkRecord);
+                DailyWorkRecord.DailyWork = _DailyWorkRecords.UpdateDailyWork(DailyWorkRecord.DailyWork);
                 _logger.Log(LogLevel.Information, this, LogFunction.Update, "DailyWorkRecord Updated {DailyWorkRecord}", DailyWorkRecord);
             }
+
             return DailyWorkRecord;
         }
 
@@ -80,8 +81,8 @@ namespace Itm.DailyWorkRecords.Controllers
         [Authorize(Policy = "EditModule")]
         public void Delete(int id)
         {
-            DailyWork DailyWorkRecord = _DailyWorkRecords.GetDailyWorkRecord(id);
-            if (DailyWorkRecord != null && DailyWorkRecord.ModuleId == _entityId)
+            DailyWorkRecord DailyWorkRecord = _DailyWorkRecords.GetDailyWorkRecord(id);
+            if (DailyWorkRecord != null && DailyWorkRecord.DailyWork.ModuleId == _entityId)
             {
                 _DailyWorkRecords.DeleteDailyWorkRecord(id);
                 _logger.Log(LogLevel.Information, this, LogFunction.Delete, "DailyWorkRecord Deleted {DailyWorkRecordId}", id);

@@ -20,25 +20,25 @@ namespace Itm.DailyWorkRecords.Services
 
          private string Apiurl => CreateApiUrl(_siteState.Alias, "DailyWorkRecord");
 
-        public async Task<List<DailyWork>> GetDailyWorkRecordsAsync(int ModuleId)
+        public async Task<List<DailyWorkRecord>> GetDailyWorkRecordsAsync(int ModuleId)
         {
-            List<DailyWork> DailyWorkRecords = await GetJsonAsync<List<DailyWork>>(CreateAuthPolicyUrl($"{Apiurl}?moduleid={ModuleId}", ModuleId));
-            return DailyWorkRecords.OrderBy(item => item.Date).ToList();
+            List<DailyWorkRecord> DailyWorkRecords = await GetJsonAsync<List<DailyWorkRecord>>(CreateAuthPolicyUrl($"{Apiurl}?moduleid={ModuleId}", ModuleId));
+            return DailyWorkRecords.OrderBy(item => item.DailyWork.Date).ToList();
         }
 
-        public async Task<DailyWork> GetDailyWorkRecordAsync(int DailyWorkRecordId, int ModuleId)
+        public async Task<DailyWorkRecord> GetDailyWorkRecordAsync(int DailyWorkRecordId, int ModuleId)
         {
-            return await GetJsonAsync<DailyWork>(CreateAuthPolicyUrl($"{Apiurl}/{DailyWorkRecordId}", ModuleId));
+            return await GetJsonAsync<DailyWorkRecord>(CreateAuthPolicyUrl($"{Apiurl}/{DailyWorkRecordId}", ModuleId));
         }
 
-        public async Task<DailyWork> AddDailyWorkRecordAsync(DailyWork DailyWorkRecord)
+        public async Task<DailyWorkRecord> AddDailyWorkRecordAsync(DailyWorkRecord DailyWorkRecord)
         {
-            return await PostJsonAsync<DailyWork>(CreateAuthPolicyUrl($"{Apiurl}?entityid={DailyWorkRecord.ModuleId}", DailyWorkRecord.ModuleId), DailyWorkRecord);
+            return await PostJsonAsync<DailyWorkRecord>(CreateAuthPolicyUrl($"{Apiurl}?entityid={DailyWorkRecord.DailyWork.ModuleId}", DailyWorkRecord.DailyWork.ModuleId), DailyWorkRecord);
         }
 
-        public async Task<DailyWork> UpdateDailyWorkRecordAsync(DailyWork DailyWorkRecord)
+        public async Task<DailyWorkRecord> UpdateDailyWorkRecordAsync(DailyWorkRecord DailyWorkRecord)
         {
-            return await PutJsonAsync<DailyWork>(CreateAuthPolicyUrl($"{Apiurl}/{DailyWorkRecord.DailyWorkId}", DailyWorkRecord.ModuleId), DailyWorkRecord);
+            return await PutJsonAsync<DailyWorkRecord>(CreateAuthPolicyUrl($"{Apiurl}/{DailyWorkRecord.DailyWork.DailyWorkId}", DailyWorkRecord.DailyWork.ModuleId), DailyWorkRecord);
         }
 
         public async Task DeleteDailyWorkRecordAsync(int DailyWorkRecordId, int ModuleId)

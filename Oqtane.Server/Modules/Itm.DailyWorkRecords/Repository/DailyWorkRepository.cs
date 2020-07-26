@@ -17,23 +17,23 @@ namespace Itm.DailyWorkRecords.Repository
 
         public IEnumerable<DailyWork> GetDailyWorks(int ModuleId)
         {
-            return _db.DailyWorkRecord.Where(item => item.ModuleId == ModuleId);
+            return _db.DailyWork.Where(item => item.ModuleId == ModuleId);
         }
 
         public DailyWork GetDailyWork(int DailyWorkId)
         {
-            return _db.DailyWorkRecord.Find(DailyWorkId);
+            return _db.DailyWork.Find(DailyWorkId);
         }
 
         public DailyWork AddDailyWork(DailyWork DailyWorkRecord)
         {
-            _db.DailyWorkRecord.Add(DailyWorkRecord);
+            _db.DailyWork.Add(DailyWorkRecord);
             _db.SaveChanges();
             return DailyWorkRecord;
         }
 
         public DailyWork UpdateDailyWork(DailyWork DailyWorkRecord)
-        {`
+        {
             _db.Entry(DailyWorkRecord).State = EntityState.Modified;
             _db.SaveChanges();
             return DailyWorkRecord;
@@ -41,8 +41,8 @@ namespace Itm.DailyWorkRecords.Repository
 
         public void DeleteDailyWork(int DailyWorkId)
         {
-            DailyWork DailyWorkRecord = _db.DailyWorkRecord.Find(DailyWorkId);
-            _db.DailyWorkRecord.Remove(DailyWorkRecord);
+            DailyWork DailyWorkRecord = _db.DailyWork.Find(DailyWorkId);
+            _db.DailyWork.Remove(DailyWorkRecord);
             _db.SaveChanges();
         }
     }
