@@ -21,11 +21,6 @@
     <Compile Remove="wwwroot\Modules\Templates\**" />
     <Content Remove="wwwroot\Modules\Templates\**" />
     <EmbeddedResource Remove="wwwroot\Modules\Templates\**" />
-    <EmbeddedResource Include="Modules\Itm.DailyWorkRecords\Scripts\Itm.DailyWorkRecords.1.0.0.sql" />
-    <EmbeddedResource Include="Modules\Itm.DailyWorkRecords\Scripts\Itm.DailyWorkRecords.Uninstall.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Scripts\Tenant.01.00.02.01.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Scripts\Master.00.00.00.00.sql" />
@@ -55,4 +50,12 @@
     <ProjectReference Include="..\Oqtane.Client\Oqtane.Client.csproj" />
     <ProjectReference Include="..\Oqtane.Shared\Oqtane.Shared.csproj" />
   </ItemGroup>
-</Project>
+  <ItemGroup>
+    <UpgradeFiles Include="$(ProjectDir)bin\Release\netcoreapp3.1\Oqtane.Upgrade.dll" />
+    <UpgradeFiles Include="$(ProjectDir)bin\Release\netcoreapp3.1\Oqtane.Upgrade.runtimeconfig.json" />
+    <TemplateFiles Include="$(ProjectDir)wwwroot\Modules\Templates\**\*.*" />
+  </ItemGroup>
+  <Target Name="AddPayloadsFolder" AfterTargets="Publish">
+    <Copy SourceFiles="@(UpgradeFiles)" DestinationFiles="@(UpgradeFiles->'$(PublishDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="false" />
+    <Copy SourceFiles="@(TemplateFiles)" DestinationFiles="@(TemplateFiles->'$(PublishDir)wwwroot\Modules\Templates\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="false" />
+  </Target></Project>
