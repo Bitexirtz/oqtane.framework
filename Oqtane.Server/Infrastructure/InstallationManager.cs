@@ -126,24 +126,14 @@ namespace Oqtane.Infrastructure
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(filename));
             }
-            if (!FileInUse(filename) == false)
+
+            try
             {
                 entry.ExtractToFile(filename, true);
             }
-        }
-        private static bool FileInUse(string path)
-        {
-            try
-            {
-                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
-                {
-                    var flag = fs.CanWrite;
-                }
-                return false;
-            }
             catch
             {
-                return true;
+                // an error occurred extracting the file
             }
         }
 
@@ -191,8 +181,8 @@ namespace Oqtane.Infrastructure
                         }
                     }
 
-                    // ensure package version is higher than current framework version
-                    if (packageversion != "" && Version.Parse(Constants.Version).CompareTo(Version.Parse(packageversion)) < 0)
+                    // ensure package version is greater than or equal to current framework version
+                    if (packageversion != "" && Version.Parse(Constants.Version).CompareTo(Version.Parse(packageversion)) <= 0)
                     {
                         FinishUpgrade();
                     }
