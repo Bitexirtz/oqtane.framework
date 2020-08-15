@@ -35,7 +35,7 @@ namespace Itm.DailyWorkRecords.Repository
 
         public IEnumerable<Work> GetWorks(int DailyWorkRecordId)
         {
-            return _db.Work.Where(item => item.DailyWorkRecordId == DailyWorkRecordId);
+            return _db.Work.Where(item => item.DailyWorkId == DailyWorkRecordId);
         }
 
         public Work UpdateWork(Work Work)

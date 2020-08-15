@@ -10,14 +10,27 @@ using Itm.DailyWorkRecords.Repository;
 
 namespace Itm.DailyWorkRecords.Manager
 {
-    public class DailyWorkRecordManager : IPortable
+    public class DailyWorkRecordManager : IInstallable, IPortable
     {
         private IDailyWorkRecordRepository _DailyWorkRecords;
+        private ISqlRepository _sql;
 
-        public DailyWorkRecordManager(IDailyWorkRecordRepository DailyWorkRecords)
+        public DailyWorkRecordManager(IDailyWorkRecordRepository DailyWorkRecords, ISqlRepository sql)
         {
             _DailyWorkRecords = DailyWorkRecords;
+            _sql = sql;
         }
+
+        public bool Install(Tenant tenant, string version)
+        {
+            return _sql.ExecuteScript(tenant, GetType().Assembly, "Itm.DailyWorkRecords." + version + ".sql");
+        }
+
+        public bool Uninstall(Tenant tenant)
+        {
+            return _sql.ExecuteScript(tenant, GetType().Assembly, "Itm.DailyWorkRecords.Uninstall.sql");
+        }
+
 
         public string ExportModule(Module module)
         {

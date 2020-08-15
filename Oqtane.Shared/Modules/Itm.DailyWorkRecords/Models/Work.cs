@@ -8,7 +8,8 @@ namespace Itm.DailyWorkRecords.Models
     {
         [Key]
         public int WorkId { get; set; }
-        public int DailyWorkRecordId { get; set; }
+        public int DailyWorkId { get; set; }
+        public int ShiftId { get; set; }
         public int ProjectId { get; set; }
         public int RegularMh { get; set; }
         public int OvertimeMh { get; set; }

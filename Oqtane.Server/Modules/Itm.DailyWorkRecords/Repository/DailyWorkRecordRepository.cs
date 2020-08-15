@@ -20,12 +20,19 @@ namespace Itm.DailyWorkRecords.Repository
             var dailyWorkRecords = new List<DailyWorkRecord>();
             var dailyWorks = _db.DailyWork.Where(item => item.ModuleId == ModuleId);
 
-            foreach (var dailyWork in dailyWorks)
+            if (dailyWorks != null)
             {
-                var dailyWorkRecord = new DailyWorkRecord();
 
-                dailyWorkRecord.DailyWork = dailyWork;
-                dailyWorkRecord.Works = _db.Work.Where(item => item.WorkId == dailyWork.DailyWorkId).ToList();
+                foreach (var dailyWork in dailyWorks)
+                {
+                    var dailyWorkRecord = new DailyWorkRecord();
+
+                    dailyWorkRecord.DailyWork = dailyWork;
+                    dailyWorkRecord.Works = _db.Work.Where(item => item.WorkId == dailyWork.DailyWorkId).ToList();
+
+                    dailyWorkRecords.Add(dailyWorkRecord);
+                }
+
             }
 
             return dailyWorkRecords;

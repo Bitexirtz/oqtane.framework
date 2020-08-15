@@ -20,7 +20,8 @@ GO
 CREATE TABLE [dbo].[ItmWork]
 (
 	[WorkId] [int] IDENTITY(1,1) NOT NULL,
-	[DailyWorkRecordId] [int] NOT NULL,
+	[DailyWorkId] [int] NOT NULL,
+	[ShiftId] [int] NOT NULL,
 	[ProjectId] [int] NOT NULL,
 	[RegularMh] [int] NOT NULL,
 	[OvertimeMh] [int],
@@ -81,7 +82,7 @@ CREATE TABLE [dbo].[ItmDailyWork]
 	[ModifiedOn] [datetime] NOT NULL,
 	CONSTRAINT [PK_ItmDailyWork] PRIMARY KEY CLUSTERED
 	(
-		[DailyWorkRecordId] ASC
+		[DailyWorkId] ASC
 	)
 )
 GO
@@ -111,11 +112,11 @@ GO
 
 ALTER TABLE [dbo].[ItmWork] WITH CHECK ADD  CONSTRAINT [FK_ItmWork_ItmShift] FOREIGN KEY([ShiftId])
 REFERENCES [dbo].[ItmShift] ([ShiftId])
-ON DELETE CASCADE
+ON DELETE NO ACTION
 GO
 
-ALTER TABLE [dbo].[ItmWork] WITH CHECK ADD  CONSTRAINT [FK_ItmWork_ItmDailyWork] FOREIGN KEY([DailyWorkRecordId])
-REFERENCES [dbo].[ItmDailyWork] ([DailyWorkRecordId])
+ALTER TABLE [dbo].[ItmWork] WITH CHECK ADD  CONSTRAINT [FK_ItmWork_ItmDailyWork] FOREIGN KEY([DailyWorkId])
+REFERENCES [dbo].[ItmDailyWork] ([DailyWorkId])
 ON DELETE CASCADE
 GO
 

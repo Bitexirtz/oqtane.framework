@@ -35,6 +35,8 @@
     <EmbeddedResource Include="Scripts\Tenant.01.00.02.01.sql" />
     <EmbeddedResource Include="Modules\HtmlText\Scripts\HtmlText.1.0.0.sql" />
     <EmbeddedResource Include="Modules\HtmlText\Scripts\HtmlText.Uninstall.sql" />
+	<EmbeddedResource Include="Modules\Itm.DailyWorkRecords\Scripts\Itm.DailyWorkRecords.1.0.0.sql" />
+	<EmbeddedResource Include="Modules\Itm.DailyWorkRecords\Scripts\Itm.DailyWorkRecords.Uninstall.sql" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="dbup" Version="4.3.0" />
