@@ -20,6 +20,7 @@ namespace Itm.DailyWorkRecords.Services
 
          private string Apiurl => CreateApiUrl(_siteState.Alias, "DailyWorkRecord");
 
+        #region "Daily Work Record"
         public async Task<List<DailyWorkRecord>> GetDailyWorkRecordsAsync(int ModuleId)
         {
             List<DailyWorkRecord> DailyWorkRecords = await GetJsonAsync<List<DailyWorkRecord>>(CreateAuthPolicyUrl($"{Apiurl}?moduleid={ModuleId}", ModuleId));
@@ -45,7 +46,17 @@ namespace Itm.DailyWorkRecords.Services
         {
             await DeleteAsync(CreateAuthPolicyUrl($"{Apiurl}/{DailyWorkRecordId}", ModuleId));
         }
+        #endregion "Daily Work Record"
 
+        #region "Process"
+        //Read One
+
+        //Read Many
+        //Add
+        //Update
+
+        //Delete
+        #endregion "Process"
         private string CreateAuthPolicyUrl(string Url, int ModuleId)
         {
             if (Url.Contains("?"))

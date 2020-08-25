@@ -10,10 +10,24 @@
 <table class="table table-borderless">
     <tr>
         <td>
-            <label class="control-label">Name: </label>
+            <label class="control-label">Work for date: </label>
         </td>
         <td>
-            <input id="_name" class="form-control" @bind="@_name" />
+            <input id="_workDate" class="form-control" @bind="@_workDate" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label class="control-label">Shift: </label>
+        </td>
+        <td>
+            <select class="form-control selectpicker" @bind="_shiftId">
+                <option>--select--</option>
+                @*@foreach (var item in Countries)
+                {
+                    <option value="@item.Id">@item.Name</option> // Blazor needs to know what values it binds to!
+                }*@
+            </select>
         </td>
     </tr>
 </table>
@@ -37,7 +51,8 @@
     };
 
     int _id;
-    string _name;
+    int _shiftId;
+    string _workDate;
     string _createdby;
     DateTime _createdon;
     string _modifiedby;
@@ -47,13 +62,15 @@
     {
         try
         {
+            
+
             if (PageState.Action == "Edit")
             {
                 _id = Int32.Parse(PageState.QueryString["id"]);
                 DailyWorkRecord DailyWorkRecord = await DailyWorkRecordService.GetDailyWorkRecordAsync(_id, ModuleState.ModuleId);
                 if (DailyWorkRecord != null)
                 {
-                    _name = DailyWorkRecord.DailyWork.Date.ToString();
+                    _workDate = DailyWorkRecord.DailyWork.Date.ToString();
                     _createdby = DailyWorkRecord.DailyWork.CreatedBy;
                     _createdon = DailyWorkRecord.DailyWork.CreatedOn;
                     _modifiedby = DailyWorkRecord.DailyWork.ModifiedBy;
@@ -76,14 +93,14 @@
             {
                 DailyWorkRecord DailyWorkRecord = new DailyWorkRecord();
                 DailyWorkRecord.DailyWork.ModuleId = ModuleState.ModuleId;
-                DailyWorkRecord.DailyWork.Date = DateTime.Parse(_name);
+                DailyWorkRecord.DailyWork.Date = DateTime.Parse(_workDate);
                 DailyWorkRecord = await DailyWorkRecordService.AddDailyWorkRecordAsync(DailyWorkRecord);
                 await logger.LogInformation("DailyWorkRecord Added {DailyWorkRecord}", DailyWorkRecord);
             }
             else
             {
                 DailyWorkRecord DailyWorkRecord = await DailyWorkRecordService.GetDailyWorkRecordAsync(_id, ModuleState.ModuleId);
-                DailyWorkRecord.DailyWork.Date = DateTime.Parse(_name);
+                DailyWorkRecord.DailyWork.Date = DateTime.Parse(_workDate);
                 await DailyWorkRecordService.UpdateDailyWorkRecordAsync(DailyWorkRecord);
                 await logger.LogInformation("DailyWorkRecord Updated {DailyWorkRecord}", DailyWorkRecord);
             }

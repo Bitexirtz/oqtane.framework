@@ -1,0 +1,63 @@
+﻿@using Oqtane.Modules.Controls
+@using Itm.DailyWorkRecords.Services
+@using Itm.DailyWorkRecords.Models
+
+@namespace Itm.DailyWorkRecords
+@inherits ModuleBase
+@inject IDailyWorkRecordService DailyWorkRecordService
+@inject NavigationManager NavigationManager
+
+
+<Section Name="Process">
+    <table class="table table-borderless">
+        <tr>
+            <td>
+                <Label For="processname" HelpText="The name of the process">Name:</Label>
+            </td>
+            <td>
+                <input id="processname" class="form-control" @bind="@_processName" />
+            </td>
+        </tr>
+    </table>
+    <button type="button" class="btn btn-success" @onclick="SaveProcess">Save</button>
+</Section>
+
+<br />
+<br />
+
+@code {
+    private int _moduleDefinitionId;
+    private string _processCode;
+    private string _processName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _moduleDefinitionId = Int32.Parse(PageState.QueryString["id"]);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading ModuleDefinition {ModuleDefinitionId} {Error}", _moduleDefinitionId, ex.Message);
+            AddModuleMessage("Error Loading Module", MessageType.Error);
+        }
+    }
+
+    private async Task SaveProcess()
+    {
+        try
+        {
+            var process = new Itm.DailyWorkRecords.Models.Process();
+
+            process.Name = _processName;
+
+            await logger.LogInformation("ModuleDefinition Saved {Process}", process);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving ModuleDefinition {ModuleDefinitionId} {Error}", _moduleDefinitionId, ex.Message);
+            AddModuleMessage("Error Saving Module", MessageType.Error);
+        }
+    }
+    }
+}

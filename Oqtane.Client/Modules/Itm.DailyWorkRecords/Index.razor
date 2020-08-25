@@ -13,6 +13,7 @@
 else
 {
     <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add DailyWorkRecord" />
+    <ActionLink Action="Admin" Security="SecurityAccessLevel.Edit" Text="Admin" />
     <br />
     <br />
     @if (@_DailyWorkRecords.Count != 0)
@@ -38,7 +39,7 @@ else
 
 @code {
     public override List<Resource> Resources => new List<Resource>()
-    {
+{
         new Resource { ResourceType = ResourceType.Stylesheet, Url = ModulePath() + "Module.css" }
     };
 
