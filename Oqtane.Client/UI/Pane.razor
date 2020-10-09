@@ -1,19 +1,24 @@
-﻿@using Microsoft.AspNetCore.Components.Rendering 
+﻿@using Microsoft.AspNetCore.Components.Rendering
 @namespace Oqtane.UI
 @inject IUserService UserService
 @inject IModuleService ModuleService
 @inject IModuleDefinitionService ModuleDefinitionService
 
-<div class="@_paneadminborder">
-    @if (_panetitle != "")
-    {
+@if (_useadminborder)
+{
+    <div class="@_paneadminborder">
         @((MarkupString)_panetitle)
-    }
+        @DynamicComponent
+    </div>
+}
+else
+{
     @DynamicComponent
-</div>
+}
 
 @code {
-    private string _paneadminborder = "";
+    private bool _useadminborder = false;
+    private string _paneadminborder = "container";
     private string _panetitle = "";
 
     [CascadingParameter]
@@ -26,14 +31,15 @@
 
     protected override void OnParametersSet()
     {
-        if (PageState.EditMode && UserSecurity.IsAuthorized(PageState.User,PermissionNames.Edit, PageState.Page.Permissions) && Name != Constants.AdminPane)
+        if (PageState.EditMode && UserSecurity.IsAuthorized(PageState.User, PermissionNames.Edit, PageState.Page.Permissions) && Name != Constants.AdminPane)
         {
+            _useadminborder = true;
             _paneadminborder = "app-pane-admin-border";
             _panetitle = "<div class=\"app-pane-admin-title\">" + Name + " Pane</div>";
         }
         else
         {
-            _paneadminborder = "";
+            _paneadminborder = "container";
             _panetitle = "";
         }
 
@@ -47,8 +53,8 @@
                     if (module != null && !module.IsDeleted)
                     {
                         var typename = module.ModuleType;
-                        // check for core module actions component
-                        if (Constants.DefaultModuleActions.Contains(PageState.Action))
+                    // check for core module actions component
+                    if (Constants.DefaultModuleActions.Contains(PageState.Action))
                         {
                             typename = Constants.DefaultModuleActionsTemplate.Replace(Constants.ActionToken, PageState.Action);
                         }
@@ -94,8 +100,8 @@
                         }
                         else
                         {
-                            // module control does not exist with name specified
-                        }
+                        // module control does not exist with name specified
+                    }
                     }
                 }
             }
