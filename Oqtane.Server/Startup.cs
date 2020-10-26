@@ -27,28 +27,32 @@ namespace Oqtane
 {
     public class Startup
     {
-        private static readonly string[] DefaultSupportedCultures = new[] { Constants.DefaultCulture };
-
         private string _webRoot;
         private Runtime _runtime;
         private bool _useSwagger;
+        private IWebHostEnvironment _env;
+        private string[] _supportedCultures;
 
         public IConfigurationRoot Configuration { get; }
 
-        public Startup(IWebHostEnvironment env)
+        public Startup(IWebHostEnvironment env, ILocalizationManager localizationManager)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             Configuration = builder.Build();
 
+            _supportedCultures = localizationManager.GetSupportedCultures();
+
             _runtime = (Configuration.GetSection("Runtime").Value == "WebAssembly") ? Runtime.WebAssembly : Runtime.Server;
-            
+
             //add possibility to switch off swagger on production.
             _useSwagger = Configuration.GetSection("UseSwagger").Value != "false";
 
             _webRoot = env.WebRootPath;
             AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(env.ContentRootPath, "Data"));
+
+            _env = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -58,7 +62,13 @@ namespace Oqtane
             // Register localization services
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor().AddCircuitOptions(options =>
+            {
+                if (_env.IsDevelopment())
+                {
+                    options.DetailedErrors = true;
+                }
+            });
 
             // setup HttpClient for server side in a client side compatible fashion ( with auth cookie )
             if (!services.Any(x => x.ServiceType == typeof(HttpClient)))
@@ -82,13 +92,13 @@ namespace Oqtane
             // register custom authorization policies
             services.AddAuthorizationCore(options =>
             {
-                options.AddPolicy("ViewPage", policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Page, PermissionNames.View)));
-                options.AddPolicy("EditPage", policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Page, PermissionNames.Edit)));
-                options.AddPolicy("ViewModule", policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Module, PermissionNames.View)));
-                options.AddPolicy("EditModule", policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Module, PermissionNames.Edit)));
-                options.AddPolicy("ViewFolder", policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Folder, PermissionNames.View)));
-                options.AddPolicy("EditFolder", policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Folder, PermissionNames.Edit)));
-                options.AddPolicy("ListFolder", policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Folder, PermissionNames.Browse)));
+                options.AddPolicy(PolicyNames.ViewPage, policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Page, PermissionNames.View)));
+                options.AddPolicy(PolicyNames.EditPage, policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Page, PermissionNames.Edit)));
+                options.AddPolicy(PolicyNames.ViewModule, policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Module, PermissionNames.View)));
+                options.AddPolicy(PolicyNames.EditModule, policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Module, PermissionNames.Edit)));
+                options.AddPolicy(PolicyNames.ViewFolder, policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Folder, PermissionNames.View)));
+                options.AddPolicy(PolicyNames.EditFolder, policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Folder, PermissionNames.Edit)));
+                options.AddPolicy(PolicyNames.ListFolder, policy => policy.Requirements.Add(new PermissionRequirement(EntityNames.Folder, PermissionNames.Browse)));
             });
 
             // register scoped core services
@@ -123,7 +133,7 @@ namespace Oqtane
 
             services.AddDbContext<MasterDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")
-                    .Replace("|DataDirectory|", AppDomain.CurrentDomain.GetData("DataDirectory")?.ToString())
+                    .Replace("|DataDirectory|", AppContext.GetData("DataDirectory")?.ToString())
                 ));
             services.AddDbContext<TenantDBContext>(options => { });
 
@@ -131,11 +141,6 @@ namespace Oqtane
                 .AddEntityFrameworkStores<TenantDBContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
-
-            var localizationSection = Configuration.GetSection("Localization");
-            var localizationOptions = localizationSection.Get<LocalizationOptions>();
-
-            services.Configure<LocalizationOptions>(localizationSection);
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -210,10 +215,7 @@ namespace Oqtane
             services.AddTransient<IUpgradeManager, UpgradeManager>();
 
             // load the external assemblies into the app domain, install services 
-            services.AddOqtane(_runtime,
-                localizationOptions.SupportedCultures.IsNullOrEmpty()
-                    ? DefaultSupportedCultures
-                    : localizationOptions.SupportedCultures);
+            services.AddOqtane(_runtime, _supportedCultures);
 
             services.AddMvc()
                 .AddNewtonsoftJson()
@@ -229,6 +231,8 @@ namespace Oqtane
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            ServiceActivator.Configure(app.ApplicationServices);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
