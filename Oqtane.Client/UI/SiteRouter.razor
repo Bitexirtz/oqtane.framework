@@ -1,4 +1,4 @@
-﻿@using System.Diagnostics.CodeAnalysis
+@using System.Diagnostics.CodeAnalysis
 @using System.Runtime.InteropServices
 @namespace Oqtane.UI
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -275,15 +275,15 @@
                         reload = Reload.Page;
                     }
 
-                    if (PageState == null || reload >= Reload.Page)
+                    if (PageState == null || reload >= Reload.Site)
                     {
                         modules = await ModuleService.GetModulesAsync(site.SiteId);
-                        (page, modules) = ProcessModules(page, modules, moduleid, action, (!string.IsNullOrEmpty(page.DefaultContainerType)) ? page.DefaultContainerType : site.DefaultContainerType);
                     }
                     else
                     {
                         modules = PageState.Modules;
                     }
+                    (page, modules) = ProcessModules(page, modules, moduleid, action, (!string.IsNullOrEmpty(page.DefaultContainerType)) ? page.DefaultContainerType : site.DefaultContainerType);
 
                     _pagestate = new PageState
                     {
@@ -442,35 +442,40 @@
         var paneindex = new Dictionary<string, int>();
         foreach (Module module in modules)
         {
-            if (module.PageId == page.PageId || module.ModuleId == moduleid)
+            // initialize module control properties
+            module.SecurityAccessLevel = SecurityAccessLevel.Host;
+            module.ControlTitle = "";
+            module.Actions = "";
+            module.UseAdminContainer = false;
+            module.PaneModuleIndex = -1;
+            module.PaneModuleCount = 0;
+
+            if ((module.PageId == page.PageId || module.ModuleId == moduleid))
             {
-                var typename = string.Empty;
+                var typename = Constants.ErrorModule;
                 if (module.ModuleDefinition != null && (module.ModuleDefinition.Runtimes == "" || module.ModuleDefinition.Runtimes.Contains(GetRuntime().ToString())))
                 {
                     typename = module.ModuleDefinition.ControlTypeTemplate;
-                }
-                else
-                {
-                    typename = Constants.ErrorModule;
-                }
 
-                // handle default action
-                if (action == Constants.DefaultAction && !string.IsNullOrEmpty(module.ModuleDefinition.DefaultAction))
-                {
-                    action = module.ModuleDefinition.DefaultAction;
-                }
-
-                // check if the module defines custom action routes
-                if (module.ModuleDefinition.ControlTypeRoutes != "")
-                {
-                    foreach (string route in module.ModuleDefinition.ControlTypeRoutes.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    // handle default action
+                    if (action == Constants.DefaultAction && !string.IsNullOrEmpty(module.ModuleDefinition.DefaultAction))
                     {
-                        if (route.StartsWith(action + "="))
+                        action = module.ModuleDefinition.DefaultAction;
+                    }
+
+                    // check if the module defines custom action routes
+                    if (module.ModuleDefinition.ControlTypeRoutes != "")
+                    {
+                        foreach (string route in module.ModuleDefinition.ControlTypeRoutes.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                         {
-                            typename = route.Replace(action + "=", "");
+                            if (route.StartsWith(action + "="))
+                            {
+                                typename = route.Replace(action + "=", "");
+                            }
                         }
                     }
                 }
+
                 module.ModuleType = typename.Replace(Constants.ActionToken, action);
 
                 // get additional metadata from IModuleControl interface
@@ -520,6 +525,7 @@
 
                 module.PaneModuleIndex = paneindex[module.Pane.ToLower()];
 
+                // container fallback
                 if (string.IsNullOrEmpty(module.ContainerType))
                 {
                     module.ContainerType = defaultcontainertype;
@@ -529,7 +535,10 @@
 
         foreach (Module module in modules.Where(item => item.PageId == page.PageId))
         {
-            module.PaneModuleCount = paneindex[module.Pane.ToLower()] + 1;
+            if (paneindex.ContainsKey(module.Pane.ToLower()))
+            {
+                module.PaneModuleCount = paneindex[module.Pane.ToLower()] + 1;
+            }
         }
 
         return (page, modules);
